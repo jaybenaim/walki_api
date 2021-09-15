@@ -22,6 +22,17 @@ SIZES = (
     ('X', 'EXTRA LARGE')
 )
 
+class Profile(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    username = models.CharField(max_length=30)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return self.username
+
 class Pet(models.Model):
     name = models.CharField(max_length=100)
     breed = models.CharField(max_length=100)
