@@ -1,5 +1,5 @@
-from main_app.models import Pet
-from main_app.serializers import GroupSerializer, PetSerializer, UserSerializer
+from main_app.models import Event, Pet, Profile
+from main_app.serializers import EventSerializer, GroupSerializer, PetSerializer, ProfileSerializer, UserSerializer
 from django.shortcuts import render
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, permissions
@@ -21,6 +21,14 @@ class GroupViewSet(viewsets.ModelViewSet):
   serializer_class = GroupSerializer
   permission_classes = [permissions.IsAuthenticated]
 
+class ProfileViewSet(viewsets.ModelViewSet):
+  """
+  API - Profiles
+  """
+  queryset = Profile.objects.all().order_by('display_name')
+  serializer_class = ProfileSerializer
+  permission_classes = [permissions.IsAuthenticated]
+
 class PetViewSet(viewsets.ModelViewSet):
   """
   API - Pets
@@ -29,4 +37,12 @@ class PetViewSet(viewsets.ModelViewSet):
   serializer_class = PetSerializer
   permission_classes = [permissions.IsAuthenticated]
 
+
+class EventViewSet(viewsets.ModelViewSet):
+  """
+  API - Events
+  """
+  queryset = Event.objects.all().order_by('date')
+  serializer_class = EventSerializer
+  permission_classes = [permissions.IsAuthenticated]
 
