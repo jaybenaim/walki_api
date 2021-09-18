@@ -48,7 +48,7 @@ class Pet(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner")
     breed = models.CharField(max_length=100, blank=True)
     description = models.TextField(max_length=250, blank=True)
-    age = models.IntegerField(blank=True)
+    age = models.IntegerField(blank=True, null=True)
     size = models.CharField(
         max_length=1,
         choices=SIZES,

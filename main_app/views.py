@@ -1,4 +1,5 @@
 import json
+from django.db.models.query_utils import Q
 from django.http.response import HttpResponse, HttpResponseBadRequest, JsonResponse
 from main_app.models import Event, Pet, Profile
 from main_app.serializers import EventSerializer, GroupSerializer, PetSerializer, ProfileSerializer, UserSerializer
@@ -8,6 +9,7 @@ from rest_framework import status, viewsets, permissions
 from django.core import serializers
 from django.db import IntegrityError
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
   """
@@ -79,12 +81,15 @@ class PetViewSet(viewsets.ModelViewSet):
   permission_classes = [permissions.IsAuthenticated]
 
 
-  def get_queryset(self, request):
+  def get_queryset(self):
     """Get the pets for 1 owner"""
-    id = request.GET.get('user')
-    pets = Pet.objects.filter(user__id=id)
+    id = self.request.GET.get('owner')
+    pets = Pet.objects.filter(Q(owner__id=id) | Q(co_owners__id=id))
 
-    return pets
+    if id:
+      return pets
+
+    return Pet.objects.all()
 class EventViewSet(viewsets.ModelViewSet):
   """
   API - Events

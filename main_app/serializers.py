@@ -18,6 +18,8 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["id", "user", "display_name", "first_name", "last_name", "dob", "phone", "address1", "address2", "province", "postal", "country", "followers", "created_at", "updated_at"]
 
 class PetSerializer(serializers.HyperlinkedModelSerializer):
+    owner = UserSerializer(many=False, read_only=True)
+    co_owners = UserSerializer(many=True, read_only=True)
     class Meta:
         model = Pet
         fields = "__all__"
