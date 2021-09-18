@@ -24,7 +24,7 @@ SIZES = (
 
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    display_name = models.CharField(max_length=30, unique=True)
+    display_name = models.CharField(max_length=30, unique=True, blank=True)
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
     dob = models.DateField('Date of Birth', null=True)
@@ -34,7 +34,7 @@ class Profile(models.Model):
     province = models.CharField(max_length=255, blank=True)
     postal = models.CharField(max_length=255, blank=True)
     country = models.CharField(max_length=255, blank=True)
-    followers = models.ManyToManyField(User, blank=True, related_name="followers")
+    followers = models.ManyToManyField(User, blank=True,related_name="followers")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     class Meta:
@@ -62,7 +62,7 @@ class Pet(models.Model):
         blank=True
     )
     image = models.ImageField(blank=True, null=True, upload_to=make_unique_picture_filename)
-    co_owners = models.ManyToManyField(User, related_name="co_owners", blank=False)
+    co_owners = models.ManyToManyField(User, related_name="co_owners", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
