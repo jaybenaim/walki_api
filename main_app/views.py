@@ -30,3 +30,9 @@ class PetViewSet(viewsets.ModelViewSet):
   permission_classes = [permissions.IsAuthenticated]
 
 
+  def get_queryset(self, request):
+    """Get the pets for 1 owner"""
+    id = request.GET.get('user')
+    pets = Pet.objects.filter(user__id=id)
+
+    return pets
