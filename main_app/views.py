@@ -107,65 +107,19 @@ class PetViewSet(viewsets.ModelViewSet):
 
   def create(self, request, *args, **kwargs):
     json_data = request.data
-    if json_data['search'] == True:
+
+    # Search by list of user ids
+    if 'search' in json_data.keys() and json_data['search'] == True:
       owners = json_data['owners']
       pets = Pet.objects.filter(Q(owner__id__in=owners) | Q(co_owners__id__in=owners))
-      serializer_context = {
-          'request': request,
-      }
+
       serializer = PetSerializer(pets, many=True, context={'request': request})
       return Response(serializer.data)
 
-# @require_http_methods(["GET", "POST"])
-# @api_view(['GET', 'POST', 'DELETE'])
-# class GetBulkPetsView(APIView):
-#   queryset = Pet.objects.all().order_by('name')
-#   serializer_class = PetSerializer
-#   permission_classes = [permissions.IsAuthenticated]
-#   # authentication_classes = [authentication.TokenAuthentication]
-#   # permission_classes = (permissions.AllowAny,)
+    # Regular create
+    json_data['owner'] = User.objects.get(pk=json_data['owner'])
+    new_pet = Pet(**json_data)
+    new_pet.save()
 
-#   def get_queryset(self):
-#     return Pet.objects.all()
-
-#   def post(self):
-#     if self.request.method == 'POST':
-#       json_data = json.loads(self.request.body)
-#       owners = json_data['owners']
-#       return Pet.objects.filter(Q(owner__id__in=owners) | Q(co_owners__id__in=owners))
-
-# @api_view(['GET', 'POST'])
-# def GetBulkPetsView(request):
-#     if request.method == 'POST':
-#       json_data = json.loads(request.body)
-#       owners = json_data['owners']
-#       return json.dumps(Pet.objects.filter(Q(owner__id__in=owners) | Q(co_owners__id__in=owners)))
-
-#     pets = []
-
-#     for pet in Pet.objects.all():
-
-#       serializer = PetSerializer(pet)
-#       pets.append(serializer.data)
-
-#     return JsonResponse({
-#       "pets": pets
-#     }, safe=False)
-# class GetBulkPetsView(viewsets.ModelViewSet):
-#   """
-#   API - Pets
-#   """
-#   queryset = Pet.objects.all().order_by('name')
-#   serializer_class = PetSerializer
-#   permission_classes = [permissions.IsAuthenticated]
-
-
-#   def get_queryset(self, request):
-#     """Get the pets for 1 owner"""
-#     id = self.request.GET.get('owner')
-#     pets = Pet.objects.filter(Q(owner__id=id) | Q(co_owners__id=id))
-
-#     if id:
-#       return pets
-
-#     return Pet.objects.all()
+    serializer = PetSerializer(new_pet, many=False, context={'request': request})
+    return Response(serializer.data)
