@@ -22,12 +22,13 @@ from main_app import views
 router = routers.DefaultRouter()
 router.register(r'api/users', views.UserViewSet)
 router.register(r'api/groups', views.GroupViewSet)
-router.register(r'api/pets', views.PetViewSet)
+router.register(r'api/pets', views.PetViewSet, basename="pets")
 router.register(r'api/events', views.EventViewSet)
 router.register(r'api/profiles', views.ProfileViewSet)
 
 urlpatterns = [
+    # path(r'api/pets/search/', views.GetBulkPetsView, name="pets_search"),
     path('', include(router.urls)),
     path("api-auth/", include("rest_framework.urls"), name="rest_framework"),
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls)
 ]

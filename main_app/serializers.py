@@ -22,7 +22,7 @@ class PetSerializer(serializers.HyperlinkedModelSerializer):
     co_owners = UserSerializer(many=True, read_only=True)
     class Meta:
         model = Pet
-        fields = "__all__"
+        fields = ["id", "name", "owner", "breed", "description", "age", "size", "gender", "image", "co_owners", "created_at", "updated_at"]
 class EventSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Event
