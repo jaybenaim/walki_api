@@ -55,17 +55,16 @@ class ProfileViewSet(viewsets.ModelViewSet):
   """
   queryset = Profile.objects.all()
   serializer_class = ProfileSerializer
-  permission_classes = [permissions.IsAuthenticated]
+  permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
   def get_queryset(self):
     """Get Profiles by user id"""
     query_param = self.request.query_params.get('user')
 
-    print(query_param)
     if query_param:
       return Profile.objects.filter(user__id=query_param)
     else:
-      return Profile.objects.all().order_by('-updated_at')[:20]
+      return Profile.objects.all()
 
 
 class EventViewSet(viewsets.ModelViewSet):
