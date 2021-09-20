@@ -1,21 +1,9 @@
-import json
-from django.db.models.query_utils import Q
-from django.http.response import HttpResponse, HttpResponseBadRequest, JsonResponse
-from django.views.generic.base import View
-from rest_framework import generics
-from rest_framework.decorators import api_view
-from rest_framework.generics import UpdateAPIView
-from rest_framework.views import APIView
+from django.http.response import  JsonResponse
+from rest_framework.response import Response
 from main_app.models import Event, Pet, Profile
 from main_app.serializers import EventSerializer, GroupSerializer, PetSerializer, ProfileSerializer, UserSerializer
-from django.shortcuts import render
 from django.contrib.auth.models import User, Group
-from rest_framework import status, viewsets, permissions
-from django.core import serializers
-from django.db import IntegrityError
-from rest_framework.response import Response
-from rest_framework.renderers import JSONRenderer
-from django.views.decorators.http import require_http_methods
+from rest_framework import viewsets, permissions
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
   """
@@ -92,7 +80,7 @@ class PetViewSet(viewsets.ModelViewSet):
   """
   queryset = Pet.objects.all().order_by('name')
   serializer_class = PetSerializer
-  permission_classes = [permissions.IsAuthenticated]
+  permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
   def get_queryset(self):
