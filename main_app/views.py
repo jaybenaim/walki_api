@@ -4,6 +4,8 @@ from main_app.models import Event, Pet, Profile
 from main_app.serializers import EventSerializer, GroupSerializer, PetSerializer, ProfileSerializer, UserSerializer
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, permissions
+from django.db.models import Q
+
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
   """
