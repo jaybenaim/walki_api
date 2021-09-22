@@ -32,9 +32,12 @@ default_app = firebase_admin.initialize_app(cred, {'databaseURL': os.environ.get
 class FirebaseAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
         auth_header = request.META.get("HTTP_AUTHORIZATION")
+        allowed_routes = ['users']
+
+        if request.method in ["GET"] or (request.method == 'POST' and allowed_routes[0] in request.path):
+            return
+
         if not auth_header:
-            if request.method in ["GET"]:
-                return
             raise NoAuthToken("No auth token provided")
 
         id_token = auth_header.split(" ").pop()
