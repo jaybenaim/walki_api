@@ -22,9 +22,16 @@ SIZES = (
     ('X', 'EXTRA LARGE')
 )
 
+class Image(models.Model):
+    as_url = models.TextField(max_length=500, blank=True, null=True)
+    as_file = models.ImageField(blank=True, null=True, upload_to=make_unique_picture_filename)
+
+    def __str__(self):
+        return self.url or 'Image'
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     display_name = models.CharField(max_length=30, unique=True, blank=True)
+    avatar_url = models.ForeignKey(Image, on_delete=models.CASCADE, default=None, null=True)
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
     dob = models.DateField('Date of Birth', null=True)
@@ -91,9 +98,3 @@ class Event(models.Model):
 
     class Meta:
         ordering = ['-date']
-
-class Image(models.Model):
-  url = models.TextField(max_length=250)
-
-  def __str__(self):
-    return self.name

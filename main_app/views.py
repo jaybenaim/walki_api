@@ -1,6 +1,6 @@
 from django.http.response import  JsonResponse
 from rest_framework.response import Response
-from main_app.models import Event, Pet, Profile
+from main_app.models import Event, Image, Pet, Profile
 from main_app.serializers import EventSerializer, GroupSerializer, PetSerializer, ProfileSerializer, UserSerializer
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, permissions
@@ -35,10 +35,25 @@ class UserViewSet(viewsets.ModelViewSet):
       new_profile.display_name = email
       new_profile.save()
 
+    # Assign the avatar_url
+    avatar = request.data['avatar_url'] or {
+      "url": '',
+      "image": ''
+    }
+
+    if avatar:
+      if avatar['url'] != '':
+        new_profile.avatar_url = Image.objects.get_or_create(url=avatar['url'])[0]
+      elif avatar['image']:
+        # @TODO Init image upload
+        new_profile.avatar_url = Image.objects.create(image=avatar['image'])
+
+      new_profile.save()
+
     return JsonResponse({
       "id": user.id,
       "email": user.email,
-      "username": user.username
+      "username": user.username,
     })
 
 class GroupViewSet(viewsets.ModelViewSet):
