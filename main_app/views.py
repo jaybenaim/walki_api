@@ -37,16 +37,16 @@ class UserViewSet(viewsets.ModelViewSet):
 
     # Assign the avatar_url
     avatar = request.data['avatar_url'] or {
-      "url": '',
-      "image": ''
+      "as_url": '',
+      "as_file": ''
     }
 
-    if avatar:
+    if 'url' in avatar.keys() and avatar['url']:
       if avatar['url'] != '':
-        new_profile.avatar_url = Image.objects.get_or_create(url=avatar['url'])[0]
+        new_profile.avatar_url = Image.objects.get_or_create(as_url=avatar['url'])[0]
       elif avatar['image']:
         # @TODO Init image upload
-        new_profile.avatar_url = Image.objects.create(image=avatar['image'])
+        new_profile.avatar_url = Image.objects.create(as_file=avatar['image'])
 
       new_profile.save()
 
